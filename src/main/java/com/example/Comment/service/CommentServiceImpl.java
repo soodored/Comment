@@ -4,8 +4,11 @@ package com.example.Comment.service;
 import com.example.Comment.entity.Comment;
 import com.example.Comment.repositoty.CommentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import java.util.Date;
 import java.util.List;
 
@@ -56,7 +59,7 @@ public class CommentServiceImpl {
         return repository.findByComment(text);
     }
 
-    public List<Comment> findAll() {
-        return repository.findAll();
+    public Page<Comment> findAll(int page, int count) {
+        return repository.findAll(PageRequest.of(page, count));
     }
 }

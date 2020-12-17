@@ -4,6 +4,8 @@ import com.example.Comment.entity.Comment;
 import com.example.Comment.entity.Notification;
 import com.example.Comment.repositoty.NotificationsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 
@@ -33,12 +35,16 @@ public class NotificationServiceImpl {
         }
     }
 
-    public Notification getNotificationByComment(Long comment){
+    public Notification getNotificationByComment(Long comment) {
         return notificationsRepository.findByCommentId(comment);
     }
 
     private void updateDelivered(Boolean delivered, Notification notification) {
         notification.setDelivered(delivered);
         notificationsRepository.save(notification);
+    }
+
+    public Page<Notification> findAll(int start, int count) {
+        return notificationsRepository.findAll(PageRequest.of(start, count));
     }
 }
