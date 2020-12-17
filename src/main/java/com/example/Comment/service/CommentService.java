@@ -11,6 +11,9 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 
+import static com.example.Comment.logic.BusinessLogic.doSomeWorkOnCommentCreation;
+import static com.example.Comment.logic.BusinessLogic.doSomeWorkOnNotification;
+
 @Service
 public class CommentService {
 
@@ -22,34 +25,49 @@ public class CommentService {
 
     public void addComment(String text) {
         Comment comment = new Comment();
-        comment.setComment(text);
-        comment.setDate(new Date());
-        Comment save = repository.save(comment);
-        if(repository.existsByComment(text) && repository.existsByDate(comment.getDate())){
-            Notifications notifications = new Notifications();
-            notifications.setDate(new Date());
+        Notifications notifications = new Notifications();
+
+        try {
+            comment = addNewComment(text);
             notifications.setDelivered(true);
-            notifications.setCommentId(save);
-            notificationsRepository.save(notifications);
-        }
-        else {
-            Notifications notifications = new Notifications();
             notifications.setDate(new Date());
-            notifications.setDelivered(false);
-            notifications.setCommentId(save);
+            notifications.setCommentId(comment);
             notificationsRepository.save(notifications);
+        } catch (RuntimeException ignored) {
+
+        }
+
+        try {
+            doSomeWorkOnCommentCreation();
+        } catch (RuntimeException e) {
+            repository.delete(comment);
+        }
+
+
+        try {
+            doSomeWorkOnNotification();
+            notifications.setDelivered(true);
+        } catch (RuntimeException e) {
+            notifications.setDelivered(false);
         }
 
     }
 
-    public Comment getComment(Long id){
-        if(repository.findById(id).isPresent()){
+    public Comment addNewComment(String text) {
+        Comment comment = new Comment();
+        comment.setComment(text);
+        comment.setDate(new Date());
+        return repository.save(comment);
+    }
+
+    public Comment getComment(Long id) {
+        if (repository.findById(id).isPresent()) {
             return repository.findById(id).orElse(new Comment());
         }
         return null;
     }
 
-    public List<Comment> findAll(){
+    public List<Comment> findAll() {
         return repository.findAll();
     }
 
