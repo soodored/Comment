@@ -8,7 +8,7 @@ import java.util.Date;
 
 @Data
 @Entity
-public class Notifications {
+public class Notification {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,4 +20,10 @@ public class Notifications {
     private Date date;
 
     private Boolean delivered;
+
+    public Notification(Comment comment, Date date, Boolean delivered) {
+        this.commentId = comment;
+        this.date = date;
+        this.delivered = delivered;
+    }
 }

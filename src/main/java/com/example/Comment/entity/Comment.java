@@ -2,6 +2,7 @@ package com.example.Comment.entity;
 
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -11,6 +12,7 @@ import java.util.Date;
 
 @Data
 @Entity
+@NoArgsConstructor
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -19,4 +21,9 @@ public class Comment {
     private String comment;
 
     private Date date;
+
+    public Comment(String comment, Date date) {
+        this.comment = comment;
+        this.date = date;
+    }
 }

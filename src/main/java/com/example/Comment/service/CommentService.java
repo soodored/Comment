@@ -2,17 +2,17 @@ package com.example.Comment.service;
 
 
 import com.example.Comment.entity.Comment;
-import com.example.Comment.entity.Notifications;
+import com.example.Comment.entity.Notification;
 import com.example.Comment.repositoty.CommentRepository;
-import com.example.Comment.repositoty.NotificationsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 import static com.example.Comment.logic.BusinessLogic.doSomeWorkOnCommentCreation;
-import static com.example.Comment.logic.BusinessLogic.doSomeWorkOnNotification;
+
 
 @Service
 public class CommentService {
@@ -21,43 +21,35 @@ public class CommentService {
     private CommentRepository repository;
 
     @Autowired
-    private NotificationsRepository notificationsRepository;
+    private NotificationService notificationService;
 
     public void addComment(String text) {
-        Comment comment = new Comment();
-        Notifications notifications = new Notifications();
+        Comment comment = createComment(text);
 
-        try {
-            comment = addNewComment(text);
-            notifications.setDelivered(true);
-            notifications.setDate(new Date());
-            notifications.setCommentId(comment);
-            notificationsRepository.save(notifications);
-        } catch (RuntimeException ignored) {
-
+        if (!doneSomeWorkOnCommentCreation()) {
+            deleteComment(comment);
+            return;
         }
 
-        try {
-            doSomeWorkOnCommentCreation();
-        } catch (RuntimeException e) {
-            repository.delete(comment);
-        }
-
-
-        try {
-            doSomeWorkOnNotification();
-            notifications.setDelivered(true);
-        } catch (RuntimeException e) {
-            notifications.setDelivered(false);
-        }
-
+        notificationService
+                .createNotification(comment, true);
     }
 
-    public Comment addNewComment(String text) {
-        Comment comment = new Comment();
-        comment.setComment(text);
-        comment.setDate(new Date());
-        return repository.save(comment);
+    private Comment createComment(String text) {
+        return repository.save(new Comment(text, new Date()));
+    }
+
+    private void deleteComment(Comment comment) {
+        repository.delete(comment);
+    }
+
+    private Boolean doneSomeWorkOnCommentCreation() {
+        try {
+            doSomeWorkOnCommentCreation();
+            return true;
+        } catch (RuntimeException exception) {
+            return false;
+        }
     }
 
     public Comment getComment(Long id) {

@@ -17,7 +17,7 @@ public class CommentController {
     private CommentService service;
 
 
-    @PutMapping("/add")
+    @PostMapping("/add")
     public RestResponse<String> addComment(@RequestParam("text") String text) {
         if(text != null){
             service.addComment(text);
