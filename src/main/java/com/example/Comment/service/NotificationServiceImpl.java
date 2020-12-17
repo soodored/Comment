@@ -6,12 +6,14 @@ import com.example.Comment.repositoty.NotificationsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import static com.example.Comment.logic.BusinessLogic.doSomeWorkOnNotification;
 
 import java.util.Date;
 
 @Service
-public class NotificationService {
+public class NotificationServiceImpl {
+
     @Autowired
     private NotificationsRepository notificationsRepository;
 
@@ -29,6 +31,10 @@ public class NotificationService {
         } catch (RuntimeException exception) {
             return false;
         }
+    }
+
+    public Notification getNotificationByComment(Long comment){
+        return notificationsRepository.findByCommentId(comment);
     }
 
     private void updateDelivered(Boolean delivered, Notification notification) {

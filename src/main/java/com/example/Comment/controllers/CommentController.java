@@ -2,8 +2,7 @@ package com.example.Comment.controllers;
 
 
 import com.example.Comment.entity.Comment;
-import com.example.Comment.entity.dto.RestResponse;
-import com.example.Comment.service.CommentService;
+import com.example.Comment.service.CommentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,30 +13,21 @@ import java.util.List;
 public class CommentController {
 
     @Autowired
-    private CommentService service;
+    private CommentServiceImpl service;
 
 
     @PostMapping("/add")
-    public RestResponse<String> addComment(@RequestParam("text") String text) {
-        if(text != null){
-            service.addComment(text);
-            return new RestResponse<>(null, "Save successfully", 0);
-        }
-            return new RestResponse<>(null, "Get Comment is PROBLEM", 1);
+    public Comment addComment(@RequestParam("text") String text) {
+        return text != null ? service.addComment(text) : null;
     }
 
-
-    @GetMapping("/get")
-    public RestResponse<Comment> getComment(@RequestParam("id") Long id){
-        Comment comment = service.getComment(id);
-        if(comment == null){
-            return new RestResponse<>(null, "Get Comment is PROBLEM", 1);
-        }
-        return new RestResponse<>(comment, "ALL RIGHT", 0);
+    @GetMapping()
+    public Comment getCommentByText(@RequestParam("text") String text) {
+        return service.getCommentByText(text);
     }
 
     @GetMapping("/findAll")
-    public List<Comment> findAll(){
+    public List<Comment> findAll() {
         return service.findAll();
     }
 
