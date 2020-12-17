@@ -2,7 +2,7 @@ package com.example.Comment.controllers;
 
 
 import com.example.Comment.entity.Notification;
-import com.example.Comment.service.NotificationServiceImpl;
+import com.example.Comment.service.NotificationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +17,7 @@ public class NotificationController {
     private static final int DEFAULT_COUNT = 10;
 
     @Autowired
-    private NotificationServiceImpl service;
+    private NotificationService service;
 
     @GetMapping()
     public Notification getNotificationByComment(@RequestParam("comment") Long comment) {

@@ -2,7 +2,7 @@ package com.example.Comment.controllers;
 
 
 import com.example.Comment.entity.Comment;
-import com.example.Comment.service.CommentServiceImpl;
+import com.example.Comment.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.*;
@@ -15,7 +15,7 @@ public class CommentController {
     private static final int DEFAULT_COUNT = 10;
 
     @Autowired
-    private CommentServiceImpl service;
+    private CommentService service;
 
 
     @PostMapping("/add")

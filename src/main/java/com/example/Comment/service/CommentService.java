@@ -8,21 +8,19 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.Date;
-import java.util.List;
 
 import static com.example.Comment.logic.BusinessLogic.doSomeWorkOnCommentCreation;
 
 
 @Service
-public class CommentServiceImpl {
+public class CommentService {
 
     @Autowired
     private CommentRepository repository;
 
     @Autowired
-    private NotificationServiceImpl notificationService;
+    private NotificationService notificationService;
 
     public Comment addComment(String text) {
         Comment comment = createComment(text);

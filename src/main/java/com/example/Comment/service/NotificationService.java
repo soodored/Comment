@@ -14,7 +14,7 @@ import static com.example.Comment.logic.BusinessLogic.doSomeWorkOnNotification;
 import java.util.Date;
 
 @Service
-public class NotificationServiceImpl {
+public class NotificationService {
 
     @Autowired
     private NotificationsRepository notificationsRepository;
